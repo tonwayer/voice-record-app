@@ -8,6 +8,7 @@ async def handler(websocket):
     while True:
         try:
             message = await websocket.recv()
+            await websocket.send("hehe")
         except websockets.ConnectionClosedOK:
             connected.remove(websocket)
             break
