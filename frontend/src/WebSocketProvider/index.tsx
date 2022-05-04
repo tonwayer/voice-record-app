@@ -1,9 +1,12 @@
 import React, { createContext, useEffect, useState, useMemo } from "react";
 
+import { toast } from "react-toastify";
+
 import {
   GET_RECORDINGS_SUCCESS,
   START_RECORDING,
   STOP_RECORDING,
+  STOP_RECORDING_SUCCESS,
   STREAM,
 } from "./messages";
 import { SOCKET_SERVER_URL } from "../config";
@@ -77,11 +80,14 @@ const WebSocketContextProvider = (props: Props) => {
     client.onmessage = (message) => {
       const payload = JSON.parse(message.data);
       if (payload.success === false) {
-        console.log(payload)
+        toast.error(payload.data)
       }
       switch (payload.message) {
         case GET_RECORDINGS_SUCCESS:
           setRecordings(payload.data);
+          break;
+        case STOP_RECORDING_SUCCESS:
+          getRecordings()
           break;
         case STREAM:
           setPeek(payload.data);

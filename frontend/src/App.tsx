@@ -3,6 +3,7 @@ import "./App.css";
 import { Home } from "./pages/home";
 import WebSocketProvider from "./WebSocketProvider";
 import Container from "@mui/material/Container";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
           <Home />
         </Container>
       </WebSocketProvider>
+      <ToastContainer position="top-right" />
     </div>
   );
 }
