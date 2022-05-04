@@ -46,4 +46,3 @@ class Recorder:
         wf.setframerate(RATE)
         wf.writeframes(b''.join(self.frames))
         wf.close()
-

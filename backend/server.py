@@ -1,3 +1,4 @@
+import os
 import json
 import asyncio
 import websockets
@@ -9,7 +10,11 @@ async def handler(websocket):
     while True:
         try:
             message = await websocket.recv()
-            if message == "start":
+            if message == "get_recordings":
+                recording_arr = os.listdir('./recordings')
+                recording_arr = list(filter(lambda filename: filename[-4:] == ".wav", recording_arr))
+                await websocket.send(json.dumps({"success": True, "data": recording_arr, "message": "recordings"}))
+            elif message == "start":
                 if recording_websocket:
                     await websocket.send(json.dumps({"success": False, "data": "The device is busy!"}))
                 else:
@@ -25,6 +30,8 @@ async def handler(websocket):
                 await websocket.send(json.dumps({"success": False, "data": "Unknown message!"}))
 
         except websockets.ConnectionClosedOK:
+            if recording_websocket == websocket:
+                recorder.stop("output.wav")
             break
         print(message)
 
