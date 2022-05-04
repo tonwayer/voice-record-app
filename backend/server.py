@@ -13,7 +13,12 @@ from messages import (GET_RECORDINGS,
     START_RECORDING_FAILED,
     STOP_RECORDING,
     STOP_RECORDING_SUCCESS,
+    UNKNOWN_MESSAGE
 )
+
+def generate_hash_name():
+    hash = random.getrandbits(128)
+    return "./recordings/%032x.wav" % hash
 
 async def handler(websocket):
     recording_websocket = None
@@ -34,18 +39,17 @@ async def handler(websocket):
                     recorder.start(websocket)
 
             elif message == STOP_RECORDING:
-                hash = random.getrandbits(128)
-                recorder.stop("./recordings/%032x.wav" % hash)
+                recorder.stop(generate_hash_name())
                 recording_websocket = None
                 recording_arr = os.listdir('./recordings')
                 recording_arr = list(filter(lambda filename: filename[-4:] == ".wav", recording_arr))
-                await websocket.send(json.dumps({"success": True, "data": recording_arr,"message": STOP_RECORDING_SUCCESS}))
+                await websocket.send(json.dumps({"success": True, "data": recording_arr, "message": STOP_RECORDING_SUCCESS}))
             else:
-                await websocket.send(json.dumps({"success": False, "data": "Unknown message!"}))
+                await websocket.send(json.dumps({"success": False, "data": "Unknown message!", "message": UNKNOWN_MESSAGE}))
 
         except websockets.ConnectionClosedOK:
             if recording_websocket == websocket:
-                recorder.stop("output.wav")
+                recorder.stop(generate_hash_name())
             break
         print(message)
 

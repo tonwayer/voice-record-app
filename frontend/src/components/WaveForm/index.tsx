@@ -5,7 +5,7 @@ type Props = {
 };
 
 const WaveForm = (props: Props) => {
-  return <LinearProgress variant="determinate" value={Math.min(100, (Math.abs(props.value) / 441) * 100)} />;
+  return <LinearProgress variant="determinate" value={Math.min(100, (Math.abs(props.value) / 2000) * 100)} />;
 };
 
 export default WaveForm;
