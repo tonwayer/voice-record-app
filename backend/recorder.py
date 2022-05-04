@@ -17,7 +17,6 @@ class Recorder:
     def __init__(self):
       self.stream = None
       self.frames = []
-      self.recording = False
 
     def start(self, websocket):
 
@@ -33,20 +32,18 @@ class Recorder:
             rate=RATE,
             input=True,
             frames_per_buffer=CHUNK,
-            # stream_callback=callback
+            stream_callback=callback
         )
         self.stream.start_stream()
-        self.recording = True
 
 
     def stop(self, filename):
-        self.recording = False
         self.stream.stop_stream()
         self.stream.close()
-        pAud.terminate()
         wf = wave.open(filename, 'wb')
         wf.setnchannels(CHANNELS)
         wf.setsampwidth(pAud.get_sample_size(SAMPLE_FORMAT))
         wf.setframerate(RATE)
         wf.writeframes(b''.join(self.frames))
         wf.close()
+        self.frames = []
