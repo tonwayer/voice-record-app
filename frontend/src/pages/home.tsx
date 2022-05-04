@@ -50,7 +50,7 @@ export const Home = () => {
       <Divider />
       <Grid item md={5} justifyContent="center">
         <h2>Recording list</h2>
-        {ws?.recordings
+        {ws?.recordings && ws?.recordings.length !== 0
           ? <RecordingList
             handleSelectFile={handleSelectFile}
             recordings={ws.recordings}

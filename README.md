@@ -37,6 +37,7 @@ A full stack application, backend in Python, frontend in React + Typescript.
 - Install the dependencies:
   ```
     pip install -r requirements.txt
+    pip install PyAudio-0.2.11-cp310-cp310-win_amd64.whl
   ```
 
 - Finally run

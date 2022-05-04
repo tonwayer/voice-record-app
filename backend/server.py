@@ -12,6 +12,7 @@ from messages import (GET_RECORDINGS,
     START_RECORDING_SUCCESS,
     START_RECORDING_FAILED,
     STOP_RECORDING,
+    STOP_RECORDING_SUCCESS,
 )
 
 async def handler(websocket):
@@ -36,7 +37,7 @@ async def handler(websocket):
                 hash = random.getrandbits(128)
                 recorder.stop("./recordings/%032x.wav" % hash)
                 recording_websocket = None
-                await websocket.send(json.dumps({"success": True, "data": "Recording ended!"}))
+                await websocket.send(json.dumps({"success": True, "data": STOP_RECORDING_SUCCESS}))
             else:
                 await websocket.send(json.dumps({"success": False, "data": "Unknown message!"}))
 
