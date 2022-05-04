@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { Home } from './pages/home';
-import WebSocketProvider from './WebSocket';
+import WebSocketProvider from './WebSocketProvider';
 
 function App() {
   return (
