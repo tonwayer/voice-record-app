@@ -17,8 +17,8 @@ async def handler(websocket):
                     await websocket.send(json.dumps({"success": True, "data": "Recording started!"}))
                     recorder.start()
 
-            elif message == "end":
-                recorder.stop()
+            elif message == "stop":
+                recorder.stop("output.wav")
                 recording_websocket = None
                 await websocket.send(json.dumps({"success": True, "data": "Recording ended!"}))
             else:

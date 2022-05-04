@@ -8,7 +8,7 @@ export const Home = () => {
   }
 
   const onStop = () => {
-    ws?.sendMessage("start")
+    ws?.sendMessage("stop")
   }
 
   useEffect(() => {

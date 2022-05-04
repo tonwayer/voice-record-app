@@ -15,8 +15,16 @@ class Recorder:
       self.stream = None
       self.frames = []
 
-    def start(self, finished):
-        self.stream = pAud.open(format=pyaudio.paInt16,
+    def start(self, finished=None):
+        def callback(in_data, frame_count, time_info, status):
+            # print(in_data)
+            data = np.frombuffer(in_data, dtype=np.int16)
+            self.frames.append(in_data)
+            # print(np.amax(data))
+            return (in_data, pyaudio.paContinue)
+
+        self.stream = pAud.open(
+            format=pyaudio.paInt16,
             channels=1,
             rate=RATE,
             input=True,
@@ -25,10 +33,8 @@ class Recorder:
         )
         self.stream.start_stream()
 
-        for i in range(0, int(RATE / CHUNK * 3600)):
-            data = self.stream.read(CHUNK)
-            self.frames.append(data)
-        finished()
+        if finished != None:
+            finished()
 
     def stop(self, filename):
         self.stream.stop_stream()
@@ -41,8 +47,3 @@ class Recorder:
         wf.writeframes(b''.join(self.frames))
         wf.close()
 
-def callback(in_data, frame_count, time_info, status):
-    # print(in_data)
-    data = np.frombuffer(in_data, dtype=np.int16)
-    # print(np.amax(data))
-    return (in_data, pyaudio.paContinue)
