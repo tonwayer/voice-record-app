@@ -37,7 +37,9 @@ async def handler(websocket):
                 hash = random.getrandbits(128)
                 recorder.stop("./recordings/%032x.wav" % hash)
                 recording_websocket = None
-                await websocket.send(json.dumps({"success": True, "data": STOP_RECORDING_SUCCESS}))
+                recording_arr = os.listdir('./recordings')
+                recording_arr = list(filter(lambda filename: filename[-4:] == ".wav", recording_arr))
+                await websocket.send(json.dumps({"success": True, "data": recording_arr,"message": STOP_RECORDING_SUCCESS}))
             else:
                 await websocket.send(json.dumps({"success": False, "data": "Unknown message!"}))
 

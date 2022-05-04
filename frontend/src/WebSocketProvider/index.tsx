@@ -87,7 +87,7 @@ const WebSocketContextProvider = (props: Props) => {
           setRecordings(payload.data);
           break;
         case STOP_RECORDING_SUCCESS:
-          getRecordings()
+          setRecordings(payload.data)
           break;
         case STREAM:
           setPeek(payload.data);
