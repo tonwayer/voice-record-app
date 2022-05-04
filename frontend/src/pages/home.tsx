@@ -4,11 +4,11 @@ export const Home = () => {
   const ws = useContext(WebSocketContext)
 
   const onStart = () => {
-    ws?.sendMessage("Start clicked")
+    ws?.sendMessage("start")
   }
 
   const onStop = () => {
-    ws?.sendMessage("Stop clicked")
+    ws?.sendMessage("start")
   }
 
   useEffect(() => {
