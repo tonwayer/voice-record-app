@@ -1,16 +1,30 @@
+import json
 import asyncio
-
 import websockets
-connected = set()
+from recorder import Recorder
+
 async def handler(websocket):
-    global connected
-    connected.add(websocket)
+    recording_websocket = None
+    recorder = Recorder()
     while True:
         try:
             message = await websocket.recv()
-            await websocket.send("hehe")
+            if message == "start":
+                if recording_websocket:
+                    await websocket.send(json.dumps({"success": False, "data": "The device is busy!"}))
+                else:
+                    recording_websocket = websocket
+                    await websocket.send(json.dumps({"success": True, "data": "Recording started!"}))
+                    recorder.start()
+
+            elif message == "end":
+                recorder.stop()
+                recording_websocket = None
+                await websocket.send(json.dumps({"success": True, "data": "Recording ended!"}))
+            else:
+                await websocket.send(json.dumps({"success": False, "data": "Unknown message!"}))
+
         except websockets.ConnectionClosedOK:
-            connected.remove(websocket)
             break
         print(message)
 
