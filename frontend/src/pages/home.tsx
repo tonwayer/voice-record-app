@@ -33,21 +33,23 @@ export const Home = () => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      <Grid item xs={12} >
         <h2>Record voice</h2>
         <WaveForm value={ws?.peek ? ws.peek : 0} />
       </Grid>
-      <Grid item xs={12} justifyContent="center">
+      <Grid item xs={6}>
         <Button variant="contained" onClick={onStart}>
           Start
         </Button>
+      </Grid>
+      <Grid item xs={6}>
         <Button variant="contained" onClick={onStop}>
           Stop
         </Button>
       </Grid>
       <Divider />
       <Grid item md={5} justifyContent="center">
-        <h2>Recorded lists</h2>
+        <h2>Recording list</h2>
         {ws?.recordings
           ? <RecordingList
             handleSelectFile={handleSelectFile}
