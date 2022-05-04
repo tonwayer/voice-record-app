@@ -3,6 +3,7 @@ import {
   GET_RECORDINGS_SUCCESS,
   START_RECORDING,
   STOP_RECORDING,
+  STREAM,
 } from "./messages"
 
 type WSContextType = {
@@ -68,11 +69,13 @@ const WebSocketContextProvider = (props: Props) => {
 
     client.onmessage = (message) => {
       const payload = JSON.parse(message.data)
-
       switch (payload.message) {
         case GET_RECORDINGS_SUCCESS:
           setRecordings(payload.data)
           break;
+        case STREAM:
+            console.log(payload.data)
+            break;
         default:
           break;
       }

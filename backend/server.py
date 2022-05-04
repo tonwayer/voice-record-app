@@ -1,10 +1,18 @@
 import os
 import json
+import random
+
 import asyncio
 import websockets
 from recorder import Recorder
 
-from messages import GET_RECORDINGS, GET_RECORDINGS_SUCCESS
+from messages import (GET_RECORDINGS,
+    GET_RECORDINGS_SUCCESS,
+    START_RECORDING,
+    START_RECORDING_SUCCESS,
+    START_RECORDING_FAILED,
+    STOP_RECORDING,
+)
 
 async def handler(websocket):
     recording_websocket = None
@@ -16,16 +24,17 @@ async def handler(websocket):
                 recording_arr = os.listdir('./recordings')
                 recording_arr = list(filter(lambda filename: filename[-4:] == ".wav", recording_arr))
                 await websocket.send(json.dumps({"success": True, "data": recording_arr, "message": GET_RECORDINGS_SUCCESS}))
-            elif message == "start":
+            elif message == START_RECORDING:
                 if recording_websocket:
-                    await websocket.send(json.dumps({"success": False, "data": "The device is busy!"}))
+                    await websocket.send(json.dumps({"success": False, "data": "The device is busy!", "message": START_RECORDING_FAILED}))
                 else:
                     recording_websocket = websocket
-                    await websocket.send(json.dumps({"success": True, "data": "Recording started!"}))
-                    recorder.start()
+                    await websocket.send(json.dumps({"success": True, "data": "Recording started!", "message": START_RECORDING_SUCCESS}))
+                    recorder.start(websocket)
 
-            elif message == "stop":
-                recorder.stop("output.wav")
+            elif message == STOP_RECORDING:
+                hash = random.getrandbits(128)
+                recorder.stop("./recordings/%032x.wav" % hash)
                 recording_websocket = None
                 await websocket.send(json.dumps({"success": True, "data": "Recording ended!"}))
             else:
@@ -39,6 +48,7 @@ async def handler(websocket):
 
 async def main():
     async with websockets.serve(handler, "", 8001):
+        print("Socket server started at localhost:" + str(8001))
         await asyncio.Future()
 
 if __name__ == "__main__":

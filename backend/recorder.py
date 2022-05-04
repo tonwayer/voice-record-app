@@ -1,6 +1,9 @@
+import json
+
 import pyaudio
 import numpy as np
 import wave
+import asyncio
 
 pAud = pyaudio.PyAudio()
 # PyAudio INIT:
@@ -14,13 +17,14 @@ class Recorder:
     def __init__(self):
       self.stream = None
       self.frames = []
+      self.recording = False
 
-    def start(self, finished=None):
+    def start(self, websocket):
+
         def callback(in_data, frame_count, time_info, status):
-            # print(in_data)
             data = np.frombuffer(in_data, dtype=np.int16)
             self.frames.append(in_data)
-            # print(np.amax(data))
+            asyncio.run(websocket.send(json.dumps({"success": True, "data": int(np.amax(data)), "message": "STREAM"})))
             return (in_data, pyaudio.paContinue)
 
         self.stream = pAud.open(
@@ -29,14 +33,14 @@ class Recorder:
             rate=RATE,
             input=True,
             frames_per_buffer=CHUNK,
-            stream_callback=callback
+            # stream_callback=callback
         )
         self.stream.start_stream()
+        self.recording = True
 
-        if finished != None:
-            finished()
 
     def stop(self, filename):
+        self.recording = False
         self.stream.stop_stream()
         self.stream.close()
         pAud.terminate()
