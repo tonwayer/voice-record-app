@@ -46,9 +46,14 @@ async def handler(websocket):
             break
         print(message)
 
+
+from file_server import start_help_server
+
 async def main():
     async with websockets.serve(handler, "", 8001):
         print("Socket server started at localhost:" + str(8001))
+        start_help_server()
+        print("before gather")
         await asyncio.Future()
 
 if __name__ == "__main__":

@@ -13,7 +13,9 @@ INTERVAL = 1  # Sampling Interval in Seconds ie Interval to listen
 CHANNELS = 1
 SAMPLE_FORMAT = pyaudio.paInt16
 
+
 class Recorder:
+
     def __init__(self):
       self.stream = None
       self.frames = []
@@ -35,7 +37,6 @@ class Recorder:
             stream_callback=callback
         )
         self.stream.start_stream()
-
 
     def stop(self, filename):
         self.stream.stop_stream()
