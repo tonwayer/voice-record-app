@@ -7,6 +7,8 @@ import { GET_RECORDINGS } from "../WebSocketProvider/messages";
 import WaveForm from "../components/WaveForm";
 import RecordingList from "../components/RecordingList";
 import Grid from "@mui/material/Grid";
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
 
 export const Home = () => {
   const ws = useContext(WebSocketContext);
@@ -42,6 +44,8 @@ export const Home = () => {
         </Button>
       </Grid>
       <Divider />
+      <Grid item xs={12} justifyContent="center">
+      {selectedFile && <AudioPlayer src={"http://127.0.0.1:8000/" + selectedFile} />}
       {ws?.recordings && (
         <RecordingList
           handleSelectFile={handleSelectFile}
@@ -49,6 +53,7 @@ export const Home = () => {
           selectedFile={selectedFile}
         />
       )}
+      </Grid>
     </Grid>
   );
 };
