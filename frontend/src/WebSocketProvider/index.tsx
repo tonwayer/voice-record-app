@@ -1,10 +1,12 @@
 import React, { createContext, useEffect, useState, useMemo } from "react";
+
 import {
   GET_RECORDINGS_SUCCESS,
   START_RECORDING,
   STOP_RECORDING,
   STREAM,
 } from "./messages";
+import { SOCKET_SERVER_URL } from "../config";
 
 type WSContextType = {
   socket: WebSocket;
@@ -23,7 +25,7 @@ type Props = {
 
 const WebSocketContext = createContext<WSContextType | null>(null);
 
-let client = new WebSocket("ws://localhost:8001");
+let client = new WebSocket(SOCKET_SERVER_URL);
 
 export { WebSocketContext };
 
